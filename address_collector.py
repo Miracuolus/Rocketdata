@@ -24,32 +24,38 @@ def collector(url):
         group = soup.findAll('div', {'class': 'city-item'})
         #print(city)
         for item in group:
-
+            #print(item)
+            #print(len(group))
             city = item.find('div', {'class': 'expand-block-header js-ex-btn'}).find('h4').text
-            shop_name = item.find('div', {'class': 'shop-name'}).text
-            address = item.find('div', {'class': 'shop-address'}).text
-            phone = item.find('div', {'class': 'shop-phone'}).text
-            working_time = item.find('div', {'class': 'shop-weekends'}).text
-            if 'Время работы: ' in working_time:
-                working_time = str(working_time).partition('Время работы: ')
-                working_time = working_time[2]
+            shop_names = item.find_all('div', {'class': 'shop-list-item'})
+            for shop in shop_names:
+                shop_name =shop.find('div', {'class': 'shop-name'}).text
+                address = shop.find('div', {'class': 'shop-address'}).text
+                phone = shop.find('div', {'class': 'shop-phone'}).text
+                working_time = shop.find('div', {'class': 'shop-weekends'}).text
+                if 'Время работы: ' in working_time:
+                    working_time = str(working_time).partition('Время работы: ')
+                    working_time = working_time[2]
     
-            working_days = item.find('div', {'class': 'shop-work-time'}).text
-            if 'Без выходных:' in working_days:
-                working_days = working_days.split(':')[0]
-            
-            latitude = str(item).partition('data-shop-latitude="')
-            latitude = latitude[2].split('" ')[0]
-            longitude = str(item).partition('data-shop-longitude="')
-            longitude = longitude[2].split('" ')[0]
+                working_days = shop.find('div', {'class': 'shop-work-time'}).text
+                if 'Без выходных:' in working_days:
+                    working_days = working_days.split(':')[0]
+                
+                latitude = str(shop).partition('data-shop-latitude="')
+                latitude = latitude[2].split('" ')[0]
+                longitude = str(shop).partition('data-shop-longitude="')
+                longitude = longitude[2].split('" ')[0]
 
-            result.append({
-                'address': f'{ city }, { address }',
-                'latlon': [latitude, longitude],
-                'name': shop_name,
-                'phones': [phone],
-                'working_hours': [working_days, working_time]
-            })
+                result.append({
+                    'address': f'{ city }, { address }',
+                    'latlon': [latitude, longitude],
+                    'name': shop_name,
+                    'phones': [phone],
+                    'working_hours': [working_days, working_time]
+                })
+        #print(result)
+        #print(result)
+        #print(len(result))
         create_report('result.json', result)  
     else:
         print(f'No response from the site { url }')
