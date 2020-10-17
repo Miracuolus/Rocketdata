@@ -22,10 +22,7 @@ def collector(url):
     if (s.status_code == 200):
         soup = BeautifulSoup(s.text, features="html.parser")
         group = soup.findAll('div', {'class': 'city-item'})
-        #print(city)
         for item in group:
-            #print(item)
-            #print(len(group))
             city = item.find('div', {'class': 'expand-block-header js-ex-btn'}).find('h4').text
             shop_names = item.find_all('div', {'class': 'shop-list-item'})
             for shop in shop_names:
@@ -53,11 +50,9 @@ def collector(url):
                     'phones': [phone],
                     'working_hours': [working_days, working_time]
                 })
-        #print(result)
-        #print(result)
-        #print(len(result))
         create_report('result.json', result)  
     else:
         print(f'No response from the site { url }')
 
-collector(site1)
+if __name__ == "__main__":
+    collector(site1)
