@@ -12,8 +12,7 @@ def create_report(file_name, data):
     os.makedirs('.\\json\\', exist_ok=True)
     folder_logs = os.path.abspath('.\\json\\' + file_name)
     with open(os.path.abspath(folder_logs), 'w') as fl:
-        for i in data:
-            json.dump(i, fl, ensure_ascii=False, sort_keys=True)
+        json.dump(data, fl, ensure_ascii=False, sort_keys=True, indent=4)
     return fl
 
 
@@ -21,7 +20,7 @@ def collector(url):
     result = []
     s = requests.get(url)
     if (s.status_code == 200):
-        soup = BeautifulSoup(s.text)
+        soup = BeautifulSoup(s.text, features="html.parser")
         group = soup.findAll('div', {'class': 'city-item'})
         #print(city)
         for item in group:
@@ -45,7 +44,7 @@ def collector(url):
                 'phones': [phone],
                 'working_hours': [working_days, working_time]
             })
-        create_report('json.txt', result)  
+        create_report('result.json', result)  
     else:
         print(f'No response from the site { url }')
 
