@@ -30,7 +30,13 @@ def collector(url):
             address = item.find('div', {'class': 'shop-address'}).text
             phone = item.find('div', {'class': 'shop-phone'}).text
             working_time = item.find('div', {'class': 'shop-weekends'}).text
+            if 'Время работы: ' in working_time:
+                working_time = str(working_time).partition('Время работы: ')
+                working_time = working_time[2]
+    
             working_days = item.find('div', {'class': 'shop-work-time'}).text
+            if 'Без выходных:' in working_days:
+                working_days = working_days.split(':')[0]
             
             latitude = str(item).partition('data-shop-latitude="')
             latitude = latitude[2].split('" ')[0]
