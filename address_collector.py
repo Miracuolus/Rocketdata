@@ -5,7 +5,7 @@ import json
 
 
 site1 = 'https://www.mebelshara.ru/contacts'
-site2 = 'https://www.tui.ru/offices/'
+site2 = 'https://www.tui.ru'
 
 
 def create_report(file_name, data):
@@ -21,7 +21,7 @@ def collector(url):
     s = requests.get(url)
     if (s.status_code == 200):
         soup = BeautifulSoup(s.text, features="html.parser")
-        group = soup.findAll('div', {'class': 'city-item'})
+        group = soup.find_all('div', {'class': 'city-item'})
         for item in group:
             city = item.find('div', {'class': 'expand-block-header js-ex-btn'}).find('h4').text
             shop_names = item.find_all('div', {'class': 'shop-list-item'})
@@ -54,5 +54,8 @@ def collector(url):
     else:
         print(f'No response from the site { url }')
 
+def collector2(url):
+    s = requests.get(url + '/api/office/list?cityId=1')
+    print(s.json()[0])
 if __name__ == "__main__":
-    collector(site1)
+    collector2(site2)
