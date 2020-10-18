@@ -6,11 +6,17 @@ import json
 
 site1 = 'https://www.mebelshara.ru/contacts'
 site2 = 'https://www.tui.ru'
+create_folder = '.\\json\\'
+
+
+def folder(file_name):
+    os.makedirs(create_folder, exist_ok=True)
+    folder_logs = os.path.abspath(create_folder + file_name)
+    return folder_logs
 
 
 def create_report(file_name, data):
-    os.makedirs('.\\json\\', exist_ok=True)
-    folder_logs = os.path.abspath('.\\json\\' + file_name)
+    folder_logs = folder(file_name)
     with open(os.path.abspath(folder_logs), 'w', encoding='utf-8') as fl:
         json_str = json.dumps(data, ensure_ascii=False, sort_keys=True, indent=4)
         fl.write(json_str)
@@ -60,7 +66,7 @@ def collector_mebelshara(url, debug=False):
                 })
         create_report('mebelshara.json', result)
         if debug:
-            f = os.path.abspath('.\\json\\' + 'mebelshara.json')
+            f = os.path.abspath(create_folder + 'mebelshara.json')
             print(f"The result has saved in  { f }")
     else:
         print(f'No response from the site { url }')
@@ -115,7 +121,7 @@ def collector_tui(url, debug=False):
             pass
     create_report('tui.json', result)
     if debug:
-            f = os.path.abspath('.\\json\\' + 'tui.json')
+            f = os.path.abspath(create_folder + 'tui.json')
             print(f"The result has saved in  { f }")
 
 
