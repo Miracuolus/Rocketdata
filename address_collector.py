@@ -31,7 +31,7 @@ def load_url(url):
 def collector_mebelshara(url, debug=False):
     file_name = 'mebelshara.json'
     if debug:
-        print(f'Start parsing site { url }')
+        print(f'Start parsing site { url }...')
     result = []
     s = load_url(url)
     if (s.status_code == 200):
@@ -86,7 +86,7 @@ def tui_cities():
 def collector_tui(url, debug=False):
     file_name = 'tui.json'
     if debug:
-        print(f'Start parsing site { url }')
+        print(f'Start parsing site { url }...')
     id_city = tui_cities()
     result = []
     for i in id_city:
