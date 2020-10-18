@@ -11,16 +11,14 @@ site2 = 'https://www.tui.ru'
 def create_report(file_name, data):
     os.makedirs('.\\json\\', exist_ok=True)
     folder_logs = os.path.abspath('.\\json\\' + file_name)
-    print(data)
     with open(os.path.abspath(folder_logs), 'w', encoding='utf-8') as fl:
-        json.dump(data, fl, ensure_ascii=False, sort_keys=True, indent=4)
+        json_str = json.dumps(data, ensure_ascii=False, sort_keys=True, indent=4)
+        fl.write(json_str)
     return fl
 
 
 def load_url(url):
     r = requests.get(url)
-    #print(dir(r))
-    #print(r.encoding)
     return r
 
 
