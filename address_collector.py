@@ -73,17 +73,14 @@ def tui_cities():
 def collector_tui(url):
     id_city = tui_cities()
     print(id_city)
-    count = 1
-    valid_response = True
-    while valid_response:
-        r = requests.get(url + '/api/office/list?cityId=' + str(count))
+    for i in id_city:
+        r = load_url(url + '/api/office/list?cityId=' + str(i))
         if (r.status_code == 200):
-            print(count)
-            if r.json() == []:
-                break
-            count += 1
+            print(i)
+            #if r.json() == []:
+            #    break
         elif (r.status_code == 404):
-            valid_response = False
+            print(f'No response from the site { url }')
         else:
             pass
 
