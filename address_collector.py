@@ -21,7 +21,7 @@ def load_url(url):
     return r
 
 
-def collector(url):
+def collector_mebelshara(url):
     result = []
     s = requests.get(url)
     if (s.status_code == 200):
@@ -69,7 +69,8 @@ def tui_cities():
         id_city.append(city['cityId'])
     return id_city
 
-def collector2(url):
+
+def collector_tui(url):
     id_city = tui_cities()
     print(id_city)
     count = 1
@@ -85,6 +86,8 @@ def collector2(url):
             valid_response = False
         else:
             pass
-    #print(s.json()[0])
+
+
 if __name__ == "__main__":
-    collector2(site2)
+    #collector_mebelshara(site1)
+    collector_tui(site2)
