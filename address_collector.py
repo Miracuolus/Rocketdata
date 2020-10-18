@@ -55,7 +55,7 @@ def collector_mebelshara(url):
                     'phones': [phone],
                     'working_hours': [working_days, working_time]
                 })
-        create_report('mebelshara.json', result)  
+        create_report('mebelshara.json', result)
     else:
         print(f'No response from the site { url }')
 
@@ -72,17 +72,27 @@ def tui_cities():
 
 def collector_tui(url):
     id_city = tui_cities()
-    print(id_city)
+    result = []
     for i in id_city:
         r = load_url(url + '/api/office/list?cityId=' + str(i))
         if (r.status_code == 200):
-            print(i)
-            #if r.json() == []:
-            #    break
+            city_office = r.json()
+            if city_office != []:
+                for i in city_office:
+                    if i['city'] == 19:
+                        result.append({
+                            'address': i['address'],
+                            'latlon': [i['latitude'], i['longitude']],
+                            'name': i['name'],
+                            'phones': i['phone'],
+                            'working_hours': [f'пн - пт { i["hoursOfOperation"]["workdays"]["startStr"] } - { i["hoursOfOperation"]["workdays"]["endStr"] }', f'сб { i["hoursOfOperation"]["saturday"]["startStr"] } - { i["hoursOfOperation"]["workdays"]["endStr"]}']
+                        })
+                        print(result)
         elif (r.status_code == 404):
             print(f'No response from the site { url }')
         else:
             pass
+    create_report('tui.json', result)
 
 
 if __name__ == "__main__":
