@@ -80,11 +80,14 @@ def collector_tui(url):
             if city_office != []:
                 for i in city_office:
                     if i['city'] == 19:
+                        phones = []
+                        for p in i['phones']:
+                            phones.append(p['phone'])
                         result.append({
                             'address': i['address'],
                             'latlon': [i['latitude'], i['longitude']],
                             'name': i['name'],
-                            'phones': i['phone'],
+                            'phones': phones,
                             'working_hours': [f'пн - пт { i["hoursOfOperation"]["workdays"]["startStr"] } - { i["hoursOfOperation"]["workdays"]["endStr"] }', f'сб { i["hoursOfOperation"]["saturday"]["startStr"] } - { i["hoursOfOperation"]["workdays"]["endStr"]}']
                         })
                         print(result)
