@@ -23,15 +23,6 @@ def create_report(file_name, data):
     return fl
 
 
-def load_url(url):
-    r = None 
-    try:
-        r = requests.get(url)
-    except requests.exceptions.ConnectionError:
-        print(f'No response from the site { url }')
-    return r
-
-
 def collector_mebelshara(url, debug=False):
     file_name = 'mebelshara.json'
     if debug:
@@ -107,7 +98,6 @@ def collector_tui(url, debug=False):
         except requests.exceptions.ConnectionError:
             print(f'No response from the site { url }')
             return
-        #r = load_url(url + '/api/office/list?cityId=' + str(i))
         if (r.status_code == 200):
             city_office = r.json()
             if city_office != []:
