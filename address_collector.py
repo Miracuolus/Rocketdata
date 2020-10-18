@@ -18,7 +18,8 @@ def folder(file_name):
 def create_report(file_name, data):
     folder_logs = folder(file_name)
     with open(os.path.abspath(folder_logs), 'w', encoding='utf-8') as fl:
-        json_str = json.dumps(data, ensure_ascii=False, sort_keys=True, indent=4)
+        json_str = json.dumps(data, ensure_ascii=False,
+                              sort_keys=True, indent=4)
         fl.write(json_str)
     return fl
 
@@ -37,21 +38,23 @@ def collector_mebelshara(url, debug=False):
         soup = BeautifulSoup(s.text, features="html.parser")
         group = soup.find_all('div', {'class': 'city-item'})
         for item in group:
-            city = item.find('div', {'class': 'expand-block-header js-ex-btn'}).find('h4').text
+            city = item.find(
+                'div', {'class': 'expand-block-header js-ex-btn'}).find('h4').text
             shop_names = item.find_all('div', {'class': 'shop-list-item'})
             for shop in shop_names:
-                shop_name =shop.find('div', {'class': 'shop-name'}).text
+                shop_name = shop.find('div', {'class': 'shop-name'}).text
                 address = shop.find('div', {'class': 'shop-address'}).text
                 phone = shop.find('div', {'class': 'shop-phone'}).text
-                working_time = shop.find('div', {'class': 'shop-weekends'}).text
+                working_time = shop.find(
+                    'div', {'class': 'shop-weekends'}).text
                 if 'Время работы: ' in working_time:
-                    working_time = str(working_time).partition('Время работы: ')
+                    working_time = str(working_time).partition(
+                        'Время работы: ')
                     working_time = working_time[2]
-    
-                working_days = shop.find('div', {'class': 'shop-work-time'}).text
+                working_days = shop.find(
+                    'div', {'class': 'shop-work-time'}).text
                 if 'Без выходных:' in working_days:
                     working_days = working_days.split(':')[0]
-                
                 latitude = str(shop).partition('data-shop-latitude="')
                 latitude = float(latitude[2].split('" ')[0])
                 longitude = str(shop).partition('data-shop-longitude="')
@@ -130,8 +133,8 @@ def collector_tui(url, debug=False):
             pass
     create_report(file_name, result)
     if debug:
-            f = folder(file_name)
-            print(f"The result has saved in  { f }")
+        f = folder(file_name)
+        print(f"The result has saved in  { f }")
 
 
 if __name__ == "__main__":
