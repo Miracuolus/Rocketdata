@@ -24,7 +24,11 @@ def create_report(file_name, data):
 
 
 def load_url(url):
-    r = requests.get(url)
+    r = None 
+    try:
+        r = requests.get(url)
+    except requests.exceptions.ConnectionError:
+        print(f'No response from the site { url }')
     return r
 
 
@@ -33,7 +37,11 @@ def collector_mebelshara(url, debug=False):
     if debug:
         print(f'Start parsing site { url }...')
     result = []
-    s = load_url(url)
+    try:
+        s = requests.get(url)
+    except requests.exceptions.ConnectionError:
+        print(f'No response from the site { url }')
+        return
     if (s.status_code == 200):
         soup = BeautifulSoup(s.text, features="html.parser")
         group = soup.find_all('div', {'class': 'city-item'})
@@ -73,9 +81,8 @@ def collector_mebelshara(url, debug=False):
         print(f'No response from the site { url }')
 
 
-def tui_cities():
-    api_cities = 'https://www.tui.ru/api/office/cities'
-    r = load_url(api_cities)
+def tui_cities(api_cities):
+    r = requests.get(api_cities)
     all_cities = r.json()
     id_city = []
     for city in all_cities:
@@ -85,12 +92,22 @@ def tui_cities():
 
 def collector_tui(url, debug=False):
     file_name = 'tui.json'
+    api_cities = 'https://www.tui.ru/api/office/cities'
     if debug:
         print(f'Start parsing site { url }...')
-    id_city = tui_cities()
+    try:
+        id_city = tui_cities(api_cities)
+    except requests.exceptions.ConnectionError:
+        print(f'No response from the site { api_cities }')
+        return
     result = []
     for i in id_city:
-        r = load_url(url + '/api/office/list?cityId=' + str(i))
+        try:
+            r = requests.get(url + '/api/office/list?cityId=' + str(i))
+        except requests.exceptions.ConnectionError:
+            print(f'No response from the site { url }')
+            return
+        #r = load_url(url + '/api/office/list?cityId=' + str(i))
         if (r.status_code == 200):
             city_office = r.json()
             if city_office != []:
