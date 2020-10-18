@@ -22,9 +22,11 @@ def load_url(url):
     return r
 
 
-def collector_mebelshara(url):
+def collector_mebelshara(url, debug=False):
+    if debug:
+        print(f'Start parsing site { url }')
     result = []
-    s = requests.get(url)
+    s = load_url(url)
     if (s.status_code == 200):
         soup = BeautifulSoup(s.text, features="html.parser")
         group = soup.find_all('div', {'class': 'city-item'})
@@ -57,6 +59,9 @@ def collector_mebelshara(url):
                     'working_hours': [working_days, working_time]
                 })
         create_report('mebelshara.json', result)
+        if debug:
+            f = os.path.abspath('.\\json\\' + 'mebelshara.json')
+            print(f"The result has saved in  { f }")
     else:
         print(f'No response from the site { url }')
 
@@ -71,7 +76,9 @@ def tui_cities():
     return id_city
 
 
-def collector_tui(url):
+def collector_tui(url, debug=False):
+    if debug:
+        print(f'Start parsing site { url }')
     id_city = tui_cities()
     result = []
     for i in id_city:
@@ -107,8 +114,11 @@ def collector_tui(url):
         else:
             pass
     create_report('tui.json', result)
+    if debug:
+            f = os.path.abspath('.\\json\\' + 'tui.json')
+            print(f"The result has saved in  { f }")
 
 
 if __name__ == "__main__":
-    #collector_mebelshara(site1)
-    collector_tui(site2)
+    collector_mebelshara(site1, debug=True)
+    collector_tui(site2, debug=True)
