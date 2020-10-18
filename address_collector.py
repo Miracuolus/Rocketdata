@@ -11,13 +11,16 @@ site2 = 'https://www.tui.ru'
 def create_report(file_name, data):
     os.makedirs('.\\json\\', exist_ok=True)
     folder_logs = os.path.abspath('.\\json\\' + file_name)
-    with open(os.path.abspath(folder_logs), 'w') as fl:
+    print(data)
+    with open(os.path.abspath(folder_logs), 'w', encoding='utf-8') as fl:
         json.dump(data, fl, ensure_ascii=False, sort_keys=True, indent=4)
     return fl
 
 
 def load_url(url):
     r = requests.get(url)
+    #print(dir(r))
+    #print(r.encoding)
     return r
 
 
@@ -79,18 +82,28 @@ def collector_tui(url):
             city_office = r.json()
             if city_office != []:
                 for i in city_office:
-                    if i['city'] == 19:
-                        phones = []
-                        for p in i['phones']:
-                            phones.append(p['phone'])
-                        result.append({
-                            'address': i['address'],
-                            'latlon': [i['latitude'], i['longitude']],
-                            'name': i['name'],
-                            'phones': phones,
-                            'working_hours': [f'пн - пт { i["hoursOfOperation"]["workdays"]["startStr"] } - { i["hoursOfOperation"]["workdays"]["endStr"] }', f'сб { i["hoursOfOperation"]["saturday"]["startStr"] } - { i["hoursOfOperation"]["workdays"]["endStr"]}']
-                        })
-                        print(result)
+                    phones = []
+                    for p in i['phones']:
+                        phones.append(p['phone'])
+                    message = ''
+                    hours = []
+                    for key in i["hoursOfOperation"].keys():
+                        if key == 'workdays' and i['hoursOfOperation']['workdays'].get('startStr'):
+                            message = f"пн - пт { i['hoursOfOperation']['workdays']['startStr'] } - { i['hoursOfOperation']['workdays']['endStr'] }"
+                            hours.append(message)
+                        elif key == 'saturday' and i['hoursOfOperation']['saturday'].get('startStr'):
+                            message = f"сб { i['hoursOfOperation']['saturday']['startStr'] } - { i['hoursOfOperation']['saturday']['endStr'] }"
+                            hours.append(message)
+                        elif key == 'sunday' and i['hoursOfOperation']['sunday'].get('startStr'):
+                            message = f"вс { i['hoursOfOperation']['sunday']['startStr'] } - { i['hoursOfOperation']['sunday']['endStr'] }"
+                            hours.append(message)
+                    result.append({
+                        'address': i['address'],
+                        'latlon': [i['latitude'], i['longitude']],
+                        'name': i['name'],
+                        'phones': phones,
+                        'working_hours': hours
+                    })
         elif (r.status_code == 404):
             print(f'No response from the site { url }')
         else:
