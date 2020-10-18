@@ -16,6 +16,11 @@ def create_report(file_name, data):
     return fl
 
 
+def load_url(url):
+    r = requests.get(url)
+    return r
+
+
 def collector(url):
     result = []
     s = requests.get(url)
@@ -50,12 +55,25 @@ def collector(url):
                     'phones': [phone],
                     'working_hours': [working_days, working_time]
                 })
-        create_report('result.json', result)  
+        create_report('mebelshara.json', result)  
     else:
         print(f'No response from the site { url }')
 
 def collector2(url):
-    s = requests.get(url + '/api/office/list?cityId=1')
-    print(s.json()[0])
+    count = 1
+    valid_response = True
+    api_cities = 'https://www.tui.ru/api/office/cities'
+    while valid_response:
+        r = requests.get(url + '/api/office/list?cityId=' + str(count))
+        if (r.status_code == 200):
+            print(count)
+            if r.json() == []:
+                break
+            count += 1
+        elif (r.status_code == 404):
+            valid_response = False
+        else:
+            pass
+    #print(s.json()[0])
 if __name__ == "__main__":
     collector2(site2)
