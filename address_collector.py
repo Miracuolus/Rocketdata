@@ -97,7 +97,7 @@ def collector_tui(url, debug=False):
                 for i in city_office:
                     phones = []
                     for p in i['phones']:
-                        phones.append(p['phone'])
+                        phones.append(p['phone'].strip())
                     message = ''
                     hours = []
                     for key in i["hoursOfOperation"].keys():
