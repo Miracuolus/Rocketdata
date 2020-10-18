@@ -54,9 +54,9 @@ def collector_mebelshara(url, debug=False):
                     working_days = working_days.split(':')[0]
                 
                 latitude = str(shop).partition('data-shop-latitude="')
-                latitude = latitude[2].split('" ')[0]
+                latitude = float(latitude[2].split('" ')[0])
                 longitude = str(shop).partition('data-shop-longitude="')
-                longitude = longitude[2].split('" ')[0]
+                longitude = float(longitude[2].split('" ')[0])
 
                 result.append({
                     'address': f'{ city }, { address }',
