@@ -29,6 +29,7 @@ def load_url(url):
 
 
 def collector_mebelshara(url, debug=False):
+    file_name = 'mebelshara.json'
     if debug:
         print(f'Start parsing site { url }')
     result = []
@@ -64,9 +65,9 @@ def collector_mebelshara(url, debug=False):
                     'phones': [phone],
                     'working_hours': [working_days, working_time]
                 })
-        create_report('mebelshara.json', result)
+        create_report(file_name, result)
         if debug:
-            f = os.path.abspath(create_folder + 'mebelshara.json')
+            f = folder(file_name)
             print(f"The result has saved in  { f }")
     else:
         print(f'No response from the site { url }')
@@ -83,6 +84,7 @@ def tui_cities():
 
 
 def collector_tui(url, debug=False):
+    file_name = 'tui.json'
     if debug:
         print(f'Start parsing site { url }')
     id_city = tui_cities()
@@ -119,9 +121,9 @@ def collector_tui(url, debug=False):
             print(f'No response from the site { url }')
         else:
             pass
-    create_report('tui.json', result)
+    create_report(file_name, result)
     if debug:
-            f = os.path.abspath(create_folder + 'tui.json')
+            f = folder(file_name)
             print(f"The result has saved in  { f }")
 
 
